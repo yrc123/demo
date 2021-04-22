@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Document</title>
+</head>
+<body>
+	<input type="text" id="name" placeholder="输入昵称"/>
+	<button id="name-btn">连接</button>
+	<div id="message">服务器发来的信息在这里显示</div>
+	<input type="text" id="send" placeholder="输入消息"/>
+	<button id="message-btn">发送</button>
+	<script >
+			var mbtn = document.querySelector("#message-btn");
+			var nbtn = document.querySelector("#name-btn");
+			var ws;
+			var flag = false;
+			mbtn.addEventListener("click", function () {
+				var value = document.querySelector("#send").value;
+				document.querySelector("#send").value="";
+				console.log(value);
+				if(value!=""){
+					ws.send(value);
+				}
+			})
+			nbtn.addEventListener("click", function () {
+				var name = document.querySelector("#name");
+				ws = new WebSocket("ws://127.0.0.1:8080/ws?name=" + name.value);
+				ws.onmessage = function (evt) {
+					console.log(evt);
+					var node = document.createElement("div");
+					node.innerHTML = evt.data;
+					var parent = document.querySelector("#message");
+					if (flag == false) {
+						flag = true;
+						parent.removeChild(parent.firstChild);
+						parent.appendChild(node);
+					} else {
+						parent.appendChild(node);
+					}
+				}
+			})
+	</script>
+</body>
+</html>
