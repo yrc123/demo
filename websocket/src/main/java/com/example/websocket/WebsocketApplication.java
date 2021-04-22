@@ -24,8 +24,9 @@ public class WebsocketApplication {
         SpringApplication.run(WebsocketApplication.class, args);
     }
     @Bean
-    public HashMap<WebSocketSession,String> sessionMap(){
-        return new HashMap<>();
+    public HashMap<String, HashMap<String, WebSocketSession >>sessionMap(){
+        HashMap<String, HashMap<String, WebSocketSession >> room = new HashMap<>();
+        return room;
     }
 //    @Autowired
 //    HashSet<WebSocketSession>sessions;

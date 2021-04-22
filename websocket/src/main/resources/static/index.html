@@ -6,8 +6,18 @@
 	<title>Document</title>
 </head>
 <body>
-	<input type="text" id="name" placeholder="输入昵称" autofocus/>
+<div>
+	一个基于websocket的聊天室demo<br/>
+	 项目地址：<a href="https://github.com/yrc123/demo/tree/main/websocket">https://github.com/yrc123/demo/tree/main/websocket</a>
+</div>
+<hr/>
+<div>
+	<label>房间：</label><input type="text" id="room" placeholder="输入房间名" autofocus/>
+</div>
+<div>
+	<label>昵称：</label><input type="text" id="name" placeholder="输入昵称" />
 	<button id="name-btn">连接</button>
+</div>
 	<div id="message">服务器发来的信息在这里显示</div>
 	<textarea  id="send" placeholder="输入消息" disabled></textarea>
 	<button id="message-btn" disabled>发送</button>
@@ -17,6 +27,7 @@
 			var nickname = document.querySelector("#name");
 			// nickname.autofocus=true;
 			var send = document.querySelector("#send");
+			var room = document.querySelector("#room");
 			var ws;
 			var flag = false;
 			function sendMessage(){
@@ -27,6 +38,12 @@
 				// console.log(value);
 				if(value!=""){
 					ws.send(value);
+				}
+			});
+			room.addEventListener("keydown", function(evt){
+				// console.log(evt);
+				if(evt.key=="Enter"){
+					nickname.focus();
 				}
 			});
 			nickname.addEventListener("keydown", function(evt){
@@ -55,18 +72,20 @@
 				parent.appendChild(node);
 			}
 			nbtn.addEventListener("click", function () {
+				var room = document.querySelector("#room");
 				var name = document.querySelector("#name");
 				var send = document.querySelector("#send");
 				if(ws!=null){
 					ws.close();
 				}
-				ws = new WebSocket("ws://127.0.0.1:8080/ws?name=" + name.value);
+				ws = new WebSocket("ws://"+document.location.host+"/ws?name=" + name.value+"&room="+room.value);
 				ws.onopen=function(){
 					nbtn.setAttribute("disabled","");
+					name.setAttribute("disabled","");
+					room.setAttribute("disabled","");
 					send.removeAttribute("disabled");
 					mbtn.removeAttribute("disabled");
 					var nick = name.value;
-					name.setAttribute("disabled","");
 					name.value=nick;
 					send.focus();
 				};
